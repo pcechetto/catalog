@@ -1,6 +1,6 @@
 package com.example.catalog.controllers;
 
-import com.example.catalog.entities.Category;
+import com.example.catalog.dto.CategoryDTO;
 import com.example.catalog.services.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +20,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> findAll() {
-        List<Category> categories = categoryService.findAll();
+    public ResponseEntity<List<CategoryDTO>> findAll() {
+        List<CategoryDTO> categories = categoryService.findAll();
         return ResponseEntity.ok().body(categories);
     }
 }
