@@ -16,7 +16,7 @@ public class ProductDTO {
     private String imgUrl;
     private Instant date;
 
-    private List<CategoryDTO> categories = new ArrayList<>();
+    private final List<CategoryDTO> categories = new ArrayList<>();
 
     public ProductDTO() {
     }
