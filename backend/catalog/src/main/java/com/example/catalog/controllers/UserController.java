@@ -1,0 +1,52 @@
+package com.example.catalog.controllers;
+
+import com.example.catalog.dto.UserDTO;
+import com.example.catalog.dto.UserInsertDTO;
+import com.example.catalog.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
+        Page<UserDTO> users = userService.findAll(pageable);
+        return ResponseEntity.ok().body(users);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO dto) {
+        UserDTO newDto = userService.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(newDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO dto) {
+        return ResponseEntity.ok().body(userService.update(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserDTO> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}
