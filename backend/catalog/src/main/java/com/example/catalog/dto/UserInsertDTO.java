@@ -1,7 +1,10 @@
 package com.example.catalog.dto;
 
+import com.example.catalog.services.validation.UserInsertValid;
+
 @SuppressWarnings("unused")
-public class UserInsertDTO extends UserDTO{
+@UserInsertValid
+public class UserInsertDTO extends UserDTO {
 
     private String password;
 
