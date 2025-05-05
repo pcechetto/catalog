@@ -2,18 +2,30 @@ package com.example.catalog.dto;
 
 import com.example.catalog.entities.Category;
 import com.example.catalog.entities.Product;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class ProductDTO {
     private Long id;
+
+    @Size(min = 3, max = 80, message = "Name must be between 3 and 80 characters")
+    @NotBlank(message = "Name is required")
     private String name;
     private String description;
+
+    @Positive(message = "Price must be positive")
     private Double price;
     private String imgUrl;
+
+    @PastOrPresent(message = "Date must be in the past or present")
     private Instant date;
 
     private final List<CategoryDTO> categories = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.example.catalog.controllers.exceptions;
 
 import java.time.Instant;
 
+@SuppressWarnings("unused")
 public class StandardError {
     private Instant timestamp;
     private Integer status;
