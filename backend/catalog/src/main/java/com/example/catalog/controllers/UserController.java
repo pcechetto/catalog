@@ -2,6 +2,7 @@ package com.example.catalog.controllers;
 
 import com.example.catalog.dto.UserDTO;
 import com.example.catalog.dto.UserInsertDTO;
+import com.example.catalog.dto.UserUpdateDTO;
 import com.example.catalog.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> update(@Valid @PathVariable Long id, @RequestBody UserDTO dto) {
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
         return ResponseEntity.ok().body(userService.update(id, dto));
     }
 

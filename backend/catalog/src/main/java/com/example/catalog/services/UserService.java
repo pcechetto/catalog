@@ -3,12 +3,14 @@ package com.example.catalog.services;
 import com.example.catalog.dto.RoleDTO;
 import com.example.catalog.dto.UserDTO;
 import com.example.catalog.dto.UserInsertDTO;
+import com.example.catalog.dto.UserUpdateDTO;
 import com.example.catalog.entities.Role;
 import com.example.catalog.entities.User;
 import com.example.catalog.repositories.RoleRepository;
 import com.example.catalog.repositories.UserRepository;
 import com.example.catalog.services.exceptions.DatabaseException;
 import com.example.catalog.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,12 +52,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         try {
             User entity = userRepository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
             return new UserDTO(userRepository.save(entity));
-        } catch (jakarta.persistence.EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("user not found");
         }
     }
