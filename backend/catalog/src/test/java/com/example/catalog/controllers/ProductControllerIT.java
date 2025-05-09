@@ -2,7 +2,6 @@ package com.example.catalog.controllers;
 
 import com.example.catalog.dto.ProductDTO;
 import com.example.catalog.tests.Factory;
-import com.example.catalog.tests.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,24 +28,15 @@ public class ProductControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private TokenUtil tokenUtil;
-
     private Long existingId;
     private Long nonExistingId;
     private Long countTotalProducts;
 
-    private String username, password, bearerToken;
-
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         existingId = 1L;
         nonExistingId = 9999999L;
         countTotalProducts = 25L;
-
-        username = "maria@gmai.com";
-        password = "123456";
-        bearerToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
     }
 
     @Test
@@ -71,7 +61,6 @@ public class ProductControllerIT {
         String json = objectMapper.writeValueAsString(productDTO);
         ResultActions result = mockMvc.
                 perform(put("/products/{id}", existingId)
-                        .header("Authorization", "Bearer " + bearerToken)
                         .content(json)
                         .contentType("application/json")
                         .accept("application/json"));
@@ -92,7 +81,6 @@ public class ProductControllerIT {
 
         ResultActions result = mockMvc.
                 perform(put("/products/{id}", nonExistingId)
-                        .header("Authorization", "Bearer " + bearerToken)
                         .content(json)
                         .contentType("application/json")
                         .accept("application/json"));
