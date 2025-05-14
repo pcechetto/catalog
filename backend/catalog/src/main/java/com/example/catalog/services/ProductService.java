@@ -49,7 +49,7 @@ public class ProductService {
         List<Long> productsIds = page.map(ProductProjection::getId).toList();
 
         List<Product> entities = productRepository.searchProductsWithCategories(productsIds);
-        entities = Utils.replace(page.getContent(), entities);
+        entities = (List<Product>) Utils.replace(page.getContent(), entities);
         List<ProductDTO> dtos = entities.stream()
                 .filter(Objects::nonNull)
                 .map(p -> new ProductDTO(p, p.getCategories())).toList();
