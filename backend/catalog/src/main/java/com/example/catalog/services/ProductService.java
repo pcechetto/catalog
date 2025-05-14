@@ -4,16 +4,21 @@ import com.example.catalog.dto.CategoryDTO;
 import com.example.catalog.dto.ProductDTO;
 import com.example.catalog.entities.Category;
 import com.example.catalog.entities.Product;
+import com.example.catalog.projections.ProductProjection;
 import com.example.catalog.repositories.CategoryRepository;
 import com.example.catalog.repositories.ProductRepository;
 import com.example.catalog.services.exceptions.DatabaseException;
 import com.example.catalog.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -29,6 +34,15 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable) {
         return productRepository.findAll(pageable).map(ProductDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductProjection> findAllPaged(String name, String categoryId, Pageable pageable) {
+        List<Long> categoryIds = List.of();
+        if (categoryId != null && !categoryId.isBlank()) {
+            categoryIds = Arrays.stream(categoryId.split(",")).map(Long::parseLong).toList();
+        }
+        return productRepository.searchProducts(categoryIds, name, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -50,7 +64,7 @@ public class ProductService {
             Product entity = productRepository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
             return new ProductDTO(productRepository.save(entity));
-        } catch (jakarta.persistence.EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Product not found");
         }
     }
