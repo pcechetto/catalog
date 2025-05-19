@@ -31,16 +31,23 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthService authService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authService = authService;
     }
 
     @Transactional(readOnly = true)
     public Page<UserDTO> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(UserDTO::new);
+    }
+
+    public UserDTO findMe() {
+        User obj = authService.authenticated();
+        return new UserDTO(obj);
     }
 
     @Transactional(readOnly = true)
